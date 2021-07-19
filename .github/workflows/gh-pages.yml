@@ -19,8 +19,9 @@ jobs:
           node-version: '16'
           cache: 'yarn'
       - run: yarn install
-      - name: Build & Deploy to GitHub Pages
+      - run: bundle exec middleman build
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          REMOTE_BRANCH: gh-pages
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        uses: yurikoval/middleman-gh-pages-action@master
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
