@@ -20,8 +20,10 @@ jobs:
           cache: 'yarn'
       - run: yarn install
       - run: bundle exec middleman build
+      - run: cp ./build/results.index.html ./build/index.html # because GH Pages apparently doesn't do redirects?
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./build
+          cname: results.tjscioly.org
