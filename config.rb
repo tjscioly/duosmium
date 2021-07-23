@@ -4,6 +4,8 @@ require 'sciolyff/interpreter'
 
 ignore '/results/placeholder.html'
 ignore '/results/template.html'
+ignore '/results/events.csv'
+ignore 'results/schools.csv'
 
 if (num = ENV['MIN_BUILD'])
   ignore '/results/index.html'
@@ -40,15 +42,15 @@ end.to_h
 
 page '/results/index.html', locals: { interpreters: interpreters }
 page '/results/schools.html', locals: { interpreters: interpreters }
-page '/results/schools.csv', locals: { interpreters: interpreters }
-page '/results/events.csv', locals: { interpreters: interpreters }
+#page '/results/schools.csv', locals: { interpreters: interpreters }
+#page '/results/events.csv', locals: { interpreters: interpreters }
 
 # strip trailing whitespace from CSV files
-after_build do |builder|
-  base = File.join(config[:build_dir], 'results')
-  builder.thor.gsub_file File.join(base, 'schools.csv'), /\s+\Z/, ''
-  builder.thor.gsub_file File.join(base, 'events.csv' ), /\s+\Z/, ''
-end
+# after_build do |builder|
+#   base = File.join(config[:build_dir], 'results')
+#   builder.thor.gsub_file File.join(base, 'schools.csv'), /\s+\Z/, ''
+#   builder.thor.gsub_file File.join(base, 'events.csv' ), /\s+\Z/, ''
+# end
 
 return if ENV['INDEX_ONLY']
 
