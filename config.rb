@@ -4,8 +4,6 @@ require 'sciolyff/interpreter'
 
 ignore '/results/placeholder.html'
 ignore '/results/template.html'
-ignore '/results/events.csv'
-ignore 'results/schools.csv'
 
 if (num = ENV['MIN_BUILD'])
   ignore '/results/index.html'
@@ -40,33 +38,33 @@ interpreters = interpreters.sort_by do |_, i|
    i.tournament.division]
 end.to_h
 
-page '/results/index.html', locals: { interpreters: interpreters }
+page '/results/index.html', locals: { interpreters: interpreters, officials: @app.data.official }
 page '/results/schools.html', locals: { interpreters: interpreters }
-#page '/results/schools.csv', locals: { interpreters: interpreters }
-#page '/results/events.csv', locals: { interpreters: interpreters }
+page '/results/schools.csv', locals: { interpreters: interpreters }
+page '/results/events.csv', locals: { interpreters: interpreters }
 
 # strip trailing whitespace from CSV files
-# after_build do |builder|
-#   base = File.join(config[:build_dir], 'results')
-#   builder.thor.gsub_file File.join(base, 'schools.csv'), /\s+\Z/, ''
-#   builder.thor.gsub_file File.join(base, 'events.csv' ), /\s+\Z/, ''
-# end
+after_build do |builder|
+  base = File.join(config[:build_dir], 'results')
+  builder.thor.gsub_file File.join(base, 'schools.csv'), /\s+\Z/, ''
+  builder.thor.gsub_file File.join(base, 'events.csv' ), /\s+\Z/, ''
+end
 
 return if ENV['INDEX_ONLY']
 
 interpreters.each do |filename, interpreter|
   proxy "/results/#{filename}.html",
         '/results/template.html',
-        locals: { i: interpreter }
+        locals: { i: interpreter, official: (@app.data.official.include? filename) }
 end
 
-# data.upcoming.each do |info|
-#   next unless info.key?(:file) && !interpreters.key?(info[:file])
-#
-#   proxy "/results/#{info[:file]}.html",
-#         '/results/placeholder.html',
-#         locals: { t: info }
-# end
+data.official.each do |info|
+  next if interpreters.key?(info)
+
+  proxy "/results/#{info}.html",
+        '/results/placeholder.html',
+        locals: { t: info }
+end
 
 # Activate and configure extensions
 # https://middlemanapp.com/advanced/configuration/#configuring-extensions
