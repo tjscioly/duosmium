@@ -19,7 +19,7 @@ jobs:
           node-version: '16'
           cache: 'yarn'
       - run: yarn install
-      - run: bundle exec middleman build
+      - run: bundle exec middleman build --verbose
       - run: cp ./build/results/index.html ./build/index.html # because GH Pages apparently doesn't do redirects?
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
