@@ -12,7 +12,7 @@ self.addEventListener("install", function (event) {
   event.waitUntil(
     caches.open(CACHE).then(function (cache) {
       console.log("[PWA Builder] Cached offline page during install");
-      
+
       return cache.add(offlineFallbackPage);
     })
   );
@@ -33,7 +33,10 @@ self.addEventListener("fetch", function (event) {
         return response;
       })
       .catch(function (error) {
-        console.log("[PWA Builder] Network request Failed. Serving content from cache: " + error);
+        console.log(
+          "[PWA Builder] Network request Failed. Serving content from cache: " +
+            error
+        );
         return fromCache(event.request);
       })
   );
