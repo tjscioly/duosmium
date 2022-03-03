@@ -3,9 +3,12 @@
 .DS_Store
 .sass-cache
 .netlify
-build/
+_site/
 node_modules/
 .tmp/
 ztestscript*
 .idea
 vendor
+.devcontainer
+serverless/odb/**
+!serverless/odb/index.js
